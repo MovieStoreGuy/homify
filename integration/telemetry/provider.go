@@ -12,7 +12,7 @@ type (
 	Provider interface {
 		// CaptureStatistics reads an entire device list and then report
 		// devices that provide statistics to the provided telemetry.
-		CaptureStatistics(ctx context.Context, list *device.List) error
+		CaptureStatistics(ctx context.Context, list device.List) error
 		// Flush allows the provider to be periodically reset with any
 		// buffers being held to be written to the underlying system.
 		Flush(ctx context.Context) error

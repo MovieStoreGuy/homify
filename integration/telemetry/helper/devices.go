@@ -11,7 +11,7 @@ import (
 
 // CaptureStatistics filteres the list of devices and then concurrently polls
 // one of the devices for information then reporting back each sorted by timestamp.
-func CaptureStatistics(ctx context.Context, list *device.List) ([]data.Statistic, error) {
+func CaptureStatistics(ctx context.Context, list device.List) ([]data.Statistic, error) {
 	var monitors []device.MonitoredDevice
 	list.Range(func(d device.Device) bool {
 		if monitor, ok := d.(device.MonitoredDevice); ok {

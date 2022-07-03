@@ -5,15 +5,11 @@ WORKDIR /go/src/github.com/MovieStoreGuy/homify
 ADD go.mod go.mod
 ADD go.sum go.sum
 
-RUN go mod download
-
 COPY . . 
 
-RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
-    go build --ldflags='-s -w' \ 
-        --trimprefix \
-        -o homify-core \
-        ./cmd/homify
+RUN go mod download
+
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} make build
 
 FROM gcr.io/distroless/static AS core
 

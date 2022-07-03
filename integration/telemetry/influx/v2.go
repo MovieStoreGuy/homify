@@ -27,7 +27,7 @@ func NewInfluxDBv2(host, token, org, bucket string) telemetry.Provider {
 	}
 }
 
-func (c2 *ClientV2) CaptureStatistics(ctx context.Context, list *device.List) error {
+func (c2 *ClientV2) CaptureStatistics(ctx context.Context, list device.List) error {
 	stats, err := helper.CaptureStatistics(ctx, list)
 	if err != nil {
 		return err

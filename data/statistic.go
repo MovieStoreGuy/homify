@@ -9,6 +9,8 @@ import (
 )
 
 type (
+	// Statistic is the base interface type
+	// that defines the shared methods.
 	Statistic interface {
 		GetName() string
 		GetAttributes() []attribute.KeyValue
@@ -16,6 +18,7 @@ type (
 		GetMonotonic() bool
 	}
 
+	// StatisticDouble
 	StatisticDouble interface {
 		Statistic
 

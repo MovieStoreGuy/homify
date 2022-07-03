@@ -22,7 +22,7 @@ func NewLogger(log *zap.Logger) *Logger {
 	return &Logger{log: log}
 }
 
-func (l *Logger) CaptureStatistics(ctx context.Context, devices *device.List) error {
+func (l *Logger) CaptureStatistics(ctx context.Context, devices device.List) error {
 	stats, err := helper.CaptureStatistics(ctx, devices)
 	if err != nil {
 		return err

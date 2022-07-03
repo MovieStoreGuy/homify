@@ -1,4 +1,4 @@
-package devicetest
+package mock
 
 import (
 	"time"

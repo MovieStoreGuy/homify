@@ -68,11 +68,11 @@ func WithAttributes(attrs ...attribute.KeyValue) StatisticBuilder {
 
 // NewStatistic creates a new statistic value with a fixed name
 // and allows to set a custom properities for it.
-func NewStatisticDouble(name string, value float64, unit StatisticUnit, opts ...StatisticBuilder) StatisticDouble {
+func NewStatisticDouble(name string, value float64, unit Unit, opts ...StatisticBuilder) StatisticDouble {
 	return newStatistic(name, NewValue(value, unit), opts...)
 }
 
-func NewStatisticInt(name string, value int64, unit StatisticUnit, opts ...StatisticBuilder) StatisticInt {
+func NewStatisticInt(name string, value int64, unit Unit, opts ...StatisticBuilder) StatisticInt {
 	return newStatistic(name, NewValue(value, unit), opts...)
 }
 

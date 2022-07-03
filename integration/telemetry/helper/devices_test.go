@@ -10,7 +10,7 @@ import (
 
 	"github.com/MovieStoreGuy/homify/data"
 	"github.com/MovieStoreGuy/homify/device"
-	"github.com/MovieStoreGuy/homify/device/devicetest"
+	"github.com/MovieStoreGuy/homify/device/mock"
 )
 
 func TestCaptureStatistics(t *testing.T) {
@@ -27,9 +27,9 @@ func TestCaptureStatistics(t *testing.T) {
 		{
 			scenario: "No Device Reported Statistics",
 			devices: []device.Device{
-				devicetest.NewDevice(t),
-				devicetest.NewDevice(t),
-				devicetest.NewDevice(t),
+				mock.NewDevice(t),
+				mock.NewDevice(t),
+				mock.NewDevice(t),
 			},
 			expect: []data.Statistic{},
 			err:    nil,
@@ -37,11 +37,11 @@ func TestCaptureStatistics(t *testing.T) {
 		{
 			scenario: "Only one device reporting data",
 			devices: []device.Device{
-				devicetest.NewDevice(t),
-				devicetest.NewDevice(t),
-				devicetest.NewDevice(t),
-				devicetest.NewMonitoredDevice(t,
-					devicetest.WithAssertMonitoredDeviceGetStatstics(
+				mock.NewDevice(t),
+				mock.NewDevice(t),
+				mock.NewDevice(t),
+				mock.NewMonitoredDevice(t,
+					mock.WithAssertMonitoredDeviceGetStatstics(
 						ctx,
 						[]data.Statistic{
 							data.NewStatisticInt(
@@ -57,7 +57,7 @@ func TestCaptureStatistics(t *testing.T) {
 							),
 						},
 						nil,
-						devicetest.WithMethodTimes(1),
+						mock.WithMethodTimes(1),
 					),
 				),
 			},
@@ -79,8 +79,8 @@ func TestCaptureStatistics(t *testing.T) {
 		{
 			scenario: "All devices reporting statistics",
 			devices: []device.Device{
-				devicetest.NewMonitoredDevice(t,
-					devicetest.WithAssertMonitoredDeviceGetStatstics(
+				mock.NewMonitoredDevice(t,
+					mock.WithAssertMonitoredDeviceGetStatstics(
 						ctx,
 						[]data.Statistic{
 							data.NewStatisticInt(
@@ -118,11 +118,11 @@ func TestCaptureStatistics(t *testing.T) {
 							),
 						},
 						nil,
-						devicetest.WithMethodTimes(1),
+						mock.WithMethodTimes(1),
 					),
 				),
-				devicetest.NewMonitoredDevice(t,
-					devicetest.WithAssertMonitoredDeviceGetStatstics(
+				mock.NewMonitoredDevice(t,
+					mock.WithAssertMonitoredDeviceGetStatstics(
 						ctx,
 						[]data.Statistic{
 							data.NewStatisticInt(
@@ -149,7 +149,7 @@ func TestCaptureStatistics(t *testing.T) {
 							),
 						},
 						nil,
-						devicetest.WithMethodTimes(1),
+						mock.WithMethodTimes(1),
 					),
 				),
 			},

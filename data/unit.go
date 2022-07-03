@@ -3,16 +3,16 @@ package data
 import "fmt"
 
 type (
-	StatisticUnit int
+	Unit int
 
-	statisticSuffix struct {
+	suffix struct {
 		name   string
 		suffix string
 	}
 )
 
 const (
-	_ StatisticUnit = iota
+	_ Unit = iota
 	// Time Units
 	StatisticNanosecond
 	StatisticMicrosecond
@@ -45,11 +45,11 @@ const (
 	StatisticCount
 )
 
-func (s statisticSuffix) String() string {
+func (s suffix) String() string {
 	return fmt.Sprintf("%s [%s]", s.name, s.suffix)
 }
 
-var atatisticUnits = [...]statisticSuffix{
+var units = [...]suffix{
 	{name: "unknown", suffix: ""},
 	{name: "nanosecond", suffix: "ns"},
 	{name: "microsecond", suffix: "µs"},
@@ -76,9 +76,9 @@ var atatisticUnits = [...]statisticSuffix{
 	{name: "count", suffix: ""},
 }
 
-func (s StatisticUnit) String() string {
-	if i := int(s); i < len(atatisticUnits) {
-		return atatisticUnits[i].String()
+func (s Unit) String() string {
+	if i := int(s); i < len(units) {
+		return units[i].String()
 	}
 	return "unknown"
 }

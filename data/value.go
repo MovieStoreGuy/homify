@@ -11,11 +11,11 @@ type (
 	// Value defines a statistic value with a statistical unit
 	Value[vt ValueType] struct {
 		value vt
-		unit  StatisticUnit
+		unit  Unit
 	}
 )
 
-func NewValue[VT ValueType](value VT, unit StatisticUnit) *Value[VT] {
+func NewValue[VT ValueType](value VT, unit Unit) *Value[VT] {
 	return &Value[VT]{value: value, unit: unit}
 }
 
@@ -23,7 +23,7 @@ func (v *Value[VT]) Value() VT {
 	return v.value
 }
 
-func (v *Value[VT]) Unit() StatisticUnit {
+func (v *Value[VT]) Unit() Unit {
 	return v.unit
 }
 

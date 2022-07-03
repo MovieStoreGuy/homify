@@ -1,0 +1,4 @@
+# Ignoring IDE files
+.vscode/
+.idea/
+

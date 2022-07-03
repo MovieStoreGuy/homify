@@ -66,28 +66,21 @@ func WithAttributes(attrs ...attribute.KeyValue) StatisticBuilder {
 // NewStatistic creates a new statistic value with a fixed name
 // and allows to set a custom properities for it.
 func NewStatisticDouble(name string, value float64, unit StatisticUnit, opts ...StatisticBuilder) StatisticDouble {
-	stat := &statValue[float64]{
-		stat: stat{
-			Name:      name,
-			Monotonic: false,
-			Timestamp: time.Now(),
-		},
-		Value: NewValue(value, unit),
-	}
-	for _, opt := range opts {
-		opt(&stat.stat)
-	}
-	return stat
+	return newStatistic(name, NewValue(value, unit), opts...)
 }
 
 func NewStatisticInt(name string, value int64, unit StatisticUnit, opts ...StatisticBuilder) StatisticInt {
-	stat := &statValue[int64]{
+	return newStatistic(name, NewValue(value, unit), opts...)
+}
+
+func newStatistic[VT ValueType](name string, value *Value[VT], opts ...StatisticBuilder) *statValue[VT] {
+	stat := &statValue[VT]{
 		stat: stat{
 			Name:      name,
 			Monotonic: false,
 			Timestamp: time.Now(),
 		},
-		Value: NewValue(value, unit),
+		Value: value,
 	}
 	for _, opt := range opts {
 		opt(&stat.stat)

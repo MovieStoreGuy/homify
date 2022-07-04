@@ -6,5 +6,15 @@ import (
 
 type (
 	// Light represents a IoT device that is lightbulb.
-	Light = device.Device
+	Light interface {
+		device.Device
+
+		privateLight()
+	}
+
+	// EmbedableLight must be used to be embeded into
+	// the concrete type so the Light interface is satisified
+	EmbedableLight struct{}
 )
+
+func (EmbedableLight) privateLight() {}

@@ -5,14 +5,16 @@ import (
 	"image/color"
 	"testing"
 
-	"github.com/MovieStoreGuy/homify/device"
 	"github.com/MovieStoreGuy/homify/device/light"
 )
 
 type (
-	MockLight = MockDevice
+	MockLight struct {
+		MockDevice
+		light.EmbedableLight
+	}
 
-	MockLightOption = MockDeviceOption
+	MockLightOption func(ml *MockLight)
 
 	MockDimmer struct {
 		MockLight
@@ -27,21 +29,8 @@ type (
 	MockColouredOption func(mc *MockColour)
 )
 
-var (
-	_ device.Device = (*MockLight)(nil)
-	_ light.Light   = (*MockLight)(nil)
-
-	_ device.Device = (*MockDimmer)(nil)
-	_ light.Light   = (*MockDimmer)(nil)
-	_ light.Dimmer  = (*MockDimmer)(nil)
-
-	_ device.Device = (*MockColour)(nil)
-	_ light.Light   = (*MockColour)(nil)
-	_ light.Colour  = (*MockColour)(nil)
-)
-
-func WithLightDeviceOptions(opts ...MockDeviceOption) MockLightOption {
-	return func(md *MockDevice) {
+func WithLightDeviceOptions(opts ...MockLightOption) MockLightOption {
+	return func(md *MockLight) {
 		for _, opt := range opts {
 			opt(md)
 		}
@@ -51,7 +40,7 @@ func WithLightDeviceOptions(opts ...MockDeviceOption) MockLightOption {
 func WithDimmerDeviceOptions(opts ...MockDeviceOption) MockDimmerOption {
 	return func(md *MockDimmer) {
 		for _, opt := range opts {
-			opt(&md.MockLight)
+			opt(&md.MockDevice)
 		}
 	}
 }
@@ -68,7 +57,7 @@ func WithLightAssertSetBrightness(ctx context.Context, percentage float64, err e
 func WithColourDeviceOptions(opts ...MockDeviceOption) MockColouredOption {
 	return func(mc *MockColour) {
 		for _, opt := range opts {
-			opt(&mc.MockLight)
+			opt(&mc.MockDevice)
 		}
 	}
 }
@@ -82,11 +71,18 @@ func WithColourAssertSetColour(ctx context.Context, c color.Color, err error, op
 	}
 }
 
-func NewLight(tb testing.TB, opts ...MockLightOption) *MockLight {
-	return NewDevice(tb, opts...)
+func NewLight(tb testing.TB, opts ...MockLightOption) light.Light {
+	ml := &MockLight{}
+	for _, opt := range opts {
+		opt(ml)
+	}
+	tb.Cleanup(func() {
+		ml.AssertExpectations(tb)
+	})
+	return ml
 }
 
-func NewDimmer(tb testing.TB, opts ...MockDimmerOption) *MockDimmer {
+func NewDimmer(tb testing.TB, opts ...MockDimmerOption) light.Dimmer {
 	md := &MockDimmer{}
 	for _, opt := range opts {
 		opt(md)
@@ -97,7 +93,7 @@ func NewDimmer(tb testing.TB, opts ...MockDimmerOption) *MockDimmer {
 	return md
 }
 
-func NewColour(tb testing.TB, opts ...MockColouredOption) *MockColour {
+func NewColour(tb testing.TB, opts ...MockColouredOption) light.Colour {
 	mc := &MockColour{}
 	for _, opt := range opts {
 		opt(mc)

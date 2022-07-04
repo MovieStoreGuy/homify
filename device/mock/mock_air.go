@@ -16,7 +16,10 @@ type (
 
 	MockFanOption func(mf *MockFan)
 
-	MockAirMonitor = MockMonitoredDevice
+	MockAirMonitor struct {
+		air.EmbedableAirMonitor
+		MockMonitoredDevice
+	}
 
 	MockAirMonitorOption func(mam *MockAirMonitor)
 
@@ -39,7 +42,7 @@ var (
 	_ air.Heater[float64] = (*MockHeater[float64])(nil)
 )
 
-func WithAssertDeviceOptions(opts ...MockDeviceOption) MockFanOption {
+func WithFanDeviceOptions(opts ...MockDeviceOption) MockFanOption {
 	return func(mf *MockFan) {
 		for _, opt := range opts {
 			opt(&mf.MockDevice)
@@ -73,7 +76,7 @@ func WithAssertHeaterSetTemperature[V data.ValueType](ctx context.Context, temp 
 	}
 }
 
-func NewFan(tb testing.TB, opts ...MockFanOption) *MockFan {
+func NewFan(tb testing.TB, opts ...MockFanOption) air.Fan {
 	mf := &MockFan{}
 	for _, opt := range opts {
 		opt(mf)
@@ -84,7 +87,7 @@ func NewFan(tb testing.TB, opts ...MockFanOption) *MockFan {
 	return mf
 }
 
-func NewAirMonitor[V data.ValueType](tb testing.TB, opts ...MockAirMonitorOption) *MockAirMonitor {
+func NewAirMonitor[V data.ValueType](tb testing.TB, opts ...MockAirMonitorOption) air.AirMonitor {
 	ma := &MockAirMonitor{}
 	for _, opt := range opts {
 		opt(ma)
@@ -95,7 +98,7 @@ func NewAirMonitor[V data.ValueType](tb testing.TB, opts ...MockAirMonitorOption
 	return ma
 }
 
-func NewHeater[V data.ValueType](tb testing.TB, opts ...MockHeaterOption[V]) *MockHeater[V] {
+func NewHeater[V data.ValueType](tb testing.TB, opts ...MockHeaterOption[V]) air.Heater[V] {
 	mh := &MockHeater[V]{}
 	for _, opt := range opts {
 		opt(mh)
@@ -113,3 +116,5 @@ func (mf *MockFan) SetSpeed(ctx context.Context, speed float64) error {
 func (mh *MockHeater[V]) SetTemperature(ctx context.Context, temp data.Value[V]) error {
 	return mh.Called(ctx, temp).Error(0)
 }
+
+func (ma *MockAirMonitor) airmonitor() {}

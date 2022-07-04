@@ -1,6 +1,7 @@
 package device
 
 type (
+	// Group extends a list make a named list
 	Group interface {
 		List
 		// GetName returns the anme of the group
@@ -9,7 +10,6 @@ type (
 
 	group struct {
 		list
-
 		Name string
 	}
 )

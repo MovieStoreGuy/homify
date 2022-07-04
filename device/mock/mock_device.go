@@ -65,7 +65,7 @@ func WithAssertDeviceHeartbeat(ctx context.Context, state device.State, err erro
 	}
 }
 
-func WithMockDeviceOptions(opts ...MockDeviceOption) MockMonitoredDeviceOption {
+func WithMonitoredDeviceOptions(opts ...MockDeviceOption) MockMonitoredDeviceOption {
 	return func(md *MockMonitoredDevice) {
 		for _, opt := range opts {
 			opt(&md.MockDevice)

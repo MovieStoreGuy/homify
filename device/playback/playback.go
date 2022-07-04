@@ -1,3 +1,5 @@
+//go:build nobuild
+
 package playback
 
 import (

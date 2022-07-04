@@ -3,36 +3,43 @@ package mock
 import (
 	"testing"
 
-	"github.com/MovieStoreGuy/homify/device"
 	"github.com/MovieStoreGuy/homify/device/outlet"
 )
 
 type (
-	MockOutlet = MockDevice
+	MockOutlet struct {
+		MockDevice
+		outlet.EmbedableOutlet
+	}
 
-	MockOutletOption = MockDeviceOption
+	MockOutletOption func(mo *MockOutlet)
 
-	MockOutletMonitor = MockMonitoredDevice
+	MockMonitor struct {
+		MockMonitoredDevice
+		outlet.EmbedableMonitor
+	}
 
-	MockOutletMonitorOption func(mo *MockOutletMonitor)
+	MockMonitorOption func(mo *MockMonitor)
 )
 
-var (
-	_ device.Device = (*MockOutlet)(nil)
-	_ outlet.Outlet = (*MockOutlet)(nil)
-
-	_ device.Device          = (*MockOutletMonitor)(nil)
-	_ device.MonitoredDevice = (*MockOutletMonitor)(nil)
-	_ outlet.Outlet          = (*MockOutletMonitor)(nil)
-	_ outlet.OutletMonitor   = (*MockOutletMonitor)(nil)
-)
-
-func NewOutlet(tb testing.TB, opts ...MockOutletOption) *MockOutlet {
-	return NewDevice(tb, opts...)
+func WithOutletDeviceOptions(opts ...MockDeviceOption) MockOutletOption {
+	return func(mo *MockOutlet) {
+		for _, opt := range opts {
+			opt(&mo.MockDevice)
+		}
+	}
 }
 
-func NewOutletMonitor(tb testing.TB, opts ...MockOutletMonitorOption) *MockOutletMonitor {
-	mo := &MockOutletMonitor{}
+func WithMonitorDeviceOptions(opts ...MockMonitoredDeviceOption) MockMonitorOption {
+	return func(mo *MockMonitor) {
+		for _, opt := range opts {
+			opt(&mo.MockMonitoredDevice)
+		}
+	}
+}
+
+func NewOutlet(tb testing.TB, opts ...MockOutletOption) outlet.Outlet {
+	mo := &MockOutlet{}
 	for _, opt := range opts {
 		opt(mo)
 	}
@@ -40,4 +47,15 @@ func NewOutletMonitor(tb testing.TB, opts ...MockOutletMonitorOption) *MockOutle
 		mo.AssertExpectations(tb)
 	})
 	return mo
+}
+
+func NewMonitor(tb testing.TB, opts ...MockMonitorOption) outlet.Monitor {
+	mm := &MockMonitor{}
+	for _, opt := range opts {
+		opt(mm)
+	}
+	tb.Cleanup(func() {
+		mm.AssertExpectations(tb)
+	})
+	return mm
 }

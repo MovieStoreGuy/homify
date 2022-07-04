@@ -5,6 +5,16 @@ import (
 )
 
 type (
-	// OutletMonitor represents an outlet that can track its energy usage
-	OutletMonitor = device.MonitoredDevice
+	// Monitor represents an outlet that can track its energy usage
+	Monitor interface {
+		device.MonitoredDevice
+
+		privateMonitor()
+	}
+
+	// EmbedableMonitor must be embeded into the concrete struct type
+	// in order for the type to adhere to the Monitor interface
+	EmbedableMonitor struct{}
 )
+
+func (EmbedableMonitor) privateMonitor() {}

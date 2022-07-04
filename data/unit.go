@@ -3,6 +3,8 @@ package data
 import "fmt"
 
 type (
+	// Unit defines a SI definition
+	// for a recorded value.
 	Unit int
 
 	suffix struct {

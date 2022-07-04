@@ -16,19 +16,25 @@ type (
 		GetAttributes() []attribute.KeyValue
 		GetTimestamp() time.Time
 		GetMonotonic() bool
+		GetUnit() Unit
 	}
 
-	// StatisticDouble
+	// StatisticDouble is a statistic that
+	// that stores a floating point value
 	StatisticDouble interface {
 		Statistic
-
-		GetValue() *Value[float64]
+		// GetValue gets the underlying value
+		// of the statistic
+		GetValue() float64
 	}
 
+	// StatisticInt is a statistics that
+	// that stores a integer point value
 	StatisticInt interface {
 		Statistic
-
-		GetValue() *Value[int64]
+		// GetValue gets the underlying value
+		// of the statistic
+		GetValue() int64
 	}
 
 	stat struct {
@@ -95,10 +101,8 @@ func (s *stat) GetName() string                     { return s.Name }
 func (s *stat) GetAttributes() []attribute.KeyValue { return s.Attributes }
 func (s *stat) GetTimestamp() time.Time             { return s.Timestamp }
 func (s *stat) GetMonotonic() bool                  { return s.Monotonic }
-
-func (s *statValue[T]) GetValue() *Value[T] {
-	return s.Value
-}
+func (s *statValue[T]) GetValue() T                 { return s.Value.Value() }
+func (s *statValue[T]) GetUnit() Unit               { return s.Value.Unit() }
 
 func (s *statValue[T]) String() string {
 	return strings.Join([]string{
